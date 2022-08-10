@@ -1,0 +1,26 @@
+.container {
+    width: 100%;
+}
+
+.imageContainer {
+    height: fit-content;
+    width: 100%;
+    background-color: white;
+    over-flow: hidden;
+}
+.image {
+    /* height: fit-content; */
+    height: 250px;
+    width: 100%;
+    border-radius: 20px;
+}
+.detailInfo {
+    width: 100%;
+    height: fit-content;
+    margin: auto;
+    
+    /* background-color: aquamarine; */
+}
+.text {
+    width: 100%;
+}

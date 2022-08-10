@@ -1,0 +1,21 @@
+.categories {
+    width: 25%;
+    padding: 20px;
+}
+
+.productList {
+    width: 75%;
+    padding: 20px;
+
+}
+.selectContainer {
+    /* margin-bottom: 20px;  */
+    padding: 30px;
+    position: relative;
+}
+
+.select {
+    position: absolute;
+    top: 0;
+    right: 35px;
+} 

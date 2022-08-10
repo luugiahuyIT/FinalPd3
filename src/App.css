@@ -1,6 +1,10 @@
+
+
 /* .App {
   text-align: center;
 }
+
+
 
 .App-logo {
   height: 40vmin;
@@ -36,3 +40,14 @@
     transform: rotate(360deg);
   }
 } */
+body {
+  font-family: 'New Baskerville',Baskerville,serif;
+}
+.ant-card-body {
+  padding: 10px;
+}
+
+.ant-tabs-content-holder {
+  margin-top: 40px;
+  /* border-bottom: 1px solid; */
+}

@@ -1,0 +1,42 @@
+.filterContainer {
+    width: 100%;    
+    /* border: 1px solid black; */
+    padding: 20px;
+    background-color: white;
+}
+.title {
+    font-size: 20px;
+    /* line-height: 52px; */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+    padding-bottom: 10px !important;
+    color: #222222;
+    /* height: 52px; */
+
+}
+
+.line {
+    width: 40%;
+    height: 1px;
+    background-color: #CBCFD8;
+    margin-bottom: 15px;
+}
+.filterList {
+    /* padding-left: 15px; */
+}
+
+.filterItem {
+    width: 100%;
+    font-size: 19px;
+    line-height: 29px;
+    font-weight: 500;
+    color: #222222;
+    padding: 0.25em 0.5em;
+    cursor: pointer;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}

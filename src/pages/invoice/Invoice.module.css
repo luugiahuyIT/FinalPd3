@@ -1,0 +1,22 @@
+
+.invoiceItem {
+    width: 100%;
+}
+.imageContainer {
+    height: 150px;
+    width: 100%;
+}
+.image {
+    height : 100%;
+}
+.detail {
+    display: block;
+    width: 150px;
+    height: fit-content;
+    padding: 10px;
+    color: white;
+    text-align: center;
+    background-color: teal;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
