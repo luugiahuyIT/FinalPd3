@@ -4,6 +4,9 @@ import styles from './Card.module.css';
 import { Link } from 'react-router-dom';
 import Icon from '../Icon/Icon';
 // const { Meta } = Card;
+import { useDispatch } from 'react-redux';
+import { addProduct } from '../../redux/cartRedux'
+
 import {
   FavoriteBorderOutlined,
   SearchOutlined,
@@ -12,6 +15,8 @@ import {
 import { style } from '@mui/system';
 
 const CardComponent = ({ book }) => {
+  const dispatch = useDispatch();
+
   return (
     // <div className={styles.cardWrapper}>
     <Card
@@ -22,7 +27,7 @@ const CardComponent = ({ book }) => {
               <img alt='example' src={book.image} />
               <div className={styles.info}>
                 <Icon>
-                  <ShoppingCartOutlined />
+                  <ShoppingCartOutlined onClick={()=>dispatch(addProduct({...book, quantity: 1 }))}/>
                 </Icon>
                 <Icon>
                   <Link to={`/book/${book.isbn13}`}>

@@ -26,16 +26,38 @@ const cartSlice = createSlice({
         state.products.push(action.payload);
       }
       state.total = state.products.reduce((prev, cur)=> {
-        return cur.total += prev.total
-      },{total: 0});
+        return prev += cur.total
+      },0);
     },
     resetCart: (state) => {
       state.quantity = 0
       state.total = 0
       state.products = []
-    }
+    },
+    incQuantityProduct: (state, action) => {
+      const index = state.products.findIndex(
+        (product) => product.title === action.payload.title)
+        state.products[index].quantity += 1;
+        state.products[index].total += action.payload.price.slice(1);
+
+        state.total = Math.round(Number(state.total) + Number(action.payload.price.slice(1)))
+    },
+    descQuantityProduct: (state, action) => {
+      const index = state.products.findIndex(
+        (product) => product.title === action.payload.title)
+        if(state.products[index].quantity - 1 === 0) return 
+        state.products[index].quantity -= 1;
+        state.products[index].total -= action.payload.price.slice(1);
+
+        state.total = Math.round(Number(state.total) - Number(action.payload.price.slice(1)))
+    },
+    removeProduct: (state, action) => {
+      state.quantity = Number(state.quantity) - 1
+      state.total = Math.round(Number(state.total) - Number(action.payload.price.slice(1)))
+      state.products = state.products.filter(product => product.title !== action.payload.title)
+    },
   },
 });
 
-export const { addProduct, resetCart } = cartSlice.actions;
+export const { addProduct, resetCart, incQuantityProduct, descQuantityProduct, removeProduct } = cartSlice.actions;
 export default cartSlice.reducer;
