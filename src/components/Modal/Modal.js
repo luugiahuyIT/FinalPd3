@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import style from './Modal.module.css'
+import style from './Modal.module.css';
 import InvoiceItem from '../InvoiceItem/InvoiceItem';
 const Modal = ({ item, modalStyle, show, onClose, backdropStyle }) => {
   const modalRef = useRef(null);
@@ -9,7 +9,6 @@ const Modal = ({ item, modalStyle, show, onClose, backdropStyle }) => {
     } else {
       modalRef.current.classList.remove(style.visible);
     }
-    
   }, [show]);
 
   return (
@@ -25,9 +24,9 @@ const Modal = ({ item, modalStyle, show, onClose, backdropStyle }) => {
           className={style.modal}
           onClick={(e) => e.stopPropagation()}
         >
-        
-            <InvoiceItem item={item}/>
-            
+          {item.map((item) => (
+            <InvoiceItem item={item} />
+          ))}
         </div>
       </div>
     </React.Fragment>

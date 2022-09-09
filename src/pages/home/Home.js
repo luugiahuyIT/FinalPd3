@@ -11,7 +11,7 @@ const Home = () => {
       <BookSlider line/>
       <BookSlider line/>
       <BookSlider line/>
-      <BookSlider line={false}/>
+      <BookSlider type='recommend' line={false}/>
       <Footer/>
     </div>
   )

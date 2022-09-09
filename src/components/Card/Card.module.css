@@ -35,6 +35,9 @@
     position: relative;
 }
 
+.cardWrapper img {
+    height: 200px;
+}
 
 
 .cardWrapper:hover .info{

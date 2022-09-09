@@ -6,11 +6,11 @@ import { Add, Remove } from '@mui/icons-material'
 import { mobile } from '../../responsive'
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from 'react'
-// import { publicRequest } from '../api/request'
 import { useDispatch } from 'react-redux'
 import { addProduct } from '../../redux/cartRedux'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
+import { publicRequest } from '../../api/request';
 
 const Container = styled.div``
 const Wrapper = styled.div`
@@ -124,8 +124,8 @@ const Product = (props) => {
     useEffect(() => {
         const getProduct = async () => {
             try {
-                const res = await axios.get('https://api.itbook.store/1.0/search/'+id)
-                setProduct(res.data.books[0])
+                const res = await publicRequest.get(`/products/find/${id}`)
+                setProduct(res.data)
             } catch(err) {}
         }
         getProduct()
@@ -152,20 +152,20 @@ const Product = (props) => {
             {/* <Announcement /> */}
             <Wrapper>
                 <ImgContainer>
-                    <Image src={product.image}/>
+                    <Image src={product.img}/>
                 </ImgContainer>
                 <InfoContainer>
                     <Title>{product.title}</Title>
                     <Desc>
-                       {product.subtitle}
+                       {product.categories}
                     </Desc>
                     <Desc>
-                       {product.isbn13}
+                       {product.author}
                     </Desc>
-                    <Desc>
+                    {/* <Desc>
                        Số lượng trong kho
-                    </Desc>
-                    <Price> {product.price}</Price>
+                    </Desc> */}
+                    <Price> {product.price} $</Price>
                     {/* <FilterContainer>
                         <Filter>
                             <FilterTitle>Color</FilterTitle>

@@ -1,23 +1,25 @@
 import { useState, useEffect } from 'react';
+import { Modal, Form, Input } from 'antd';
 import styled from 'styled-components';
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
 import { Add, Remove } from '@mui/icons-material';
 import { mobile } from '../../responsive';
 import { useSelector } from 'react-redux';
-// import StripeCheckout from 'react-stripe-checkout'
-// import { userRequest } from '../api/request'
-import { useHistory } from 'react-router-dom';
+import StripeCheckout from 'react-stripe-checkout';
+import { userRequest } from '../../api/request';
 import { useDispatch } from 'react-redux';
 import {
   resetCart,
   incQuantityProduct,
   descQuantityProduct,
-  removeProduct
+  removeProduct,
 } from '../../redux/cartRedux';
-import { addInvoice } from '../../redux/invoiceRedux';
+// import { addInvoice } from '../../redux/invoiceRedux';
+import { addInvoice } from '../../redux/apiCalls';
 
-const KEY = process.env.REACT_APP_STRIPE;
+const KEY =
+  'pk_test_51LBp7RCkXbwpgPlHFfSoDvkJXIqcMf6dc37hYRvnRy8n44gCVqswJZWo9uCjNQNEs5LBbOWp1DoCQEValq11swiA004az9AXSt';
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -158,42 +160,57 @@ const RemoveButton = styled.button`
   text-align: center;
   font-size: 18px;
   border-radius: 15px;
-  margin-top: 10px ;
+  margin-top: 10px;
 `;
 
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
   const [quantity, setQuantity] = useState(1);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [form] = Form.useForm();
 
-  // const [stripeToken, setStripeToken] = useState(null)
-  // const history = useHistory()
-  // const onToken = (token) => {
-  //     setStripeToken(token)
-  // }
-  // useEffect(() => {
-  //     const makeRequest = async () => {
-  //         try {
-  //             const res = await userRequest.post('/checkout/payment', {
-  //                 tokenId: stripeToken.id,
-  //                 amount: cart.total * 100
-  //             })
+  console.log('key', KEY);
+  const [stripeToken, setStripeToken] = useState(null);
+  const onToken = (token) => {
+    setStripeToken(token);
+  };
+  useEffect(() => {
+    const makeRequest = async () => {
+      try {
+        const res = await userRequest.post('/checkout/payment', {
+          tokenId: stripeToken.id,
+          amount: cart.total,
+          products: cart.products
+        });
 
-  //             history.push('/success', {
-  //                 stripeData: res.data,
-  //                 products: cart,
-  //             })
-
-  //         } catch(err){}
-  //     }
-  //     stripeToken && cart.total >= 1 && makeRequest()
-  // }, [stripeToken, cart.total, history])
+        // history.push('/success', {
+        //     stripeData: res.data,
+        //     products: cart,
+        // })
+      } catch (err) {}
+    };
+    stripeToken && cart.total >= 1 && makeRequest();
+  }, [stripeToken, cart.total]);
   const orderProduct = () => {
-    dispatch(addInvoice(cart.products));
-    dispatch(resetCart());
+    // dispatch(addInvoice([...cart.products]));
+    // dispatch(resetCart());
+    setIsModalVisible(true);
+    console.log('cart', cart.products);
+  };
+  const handleCancel = () => {
+    form.resetFields();
+    setIsModalVisible(false);
   };
 
-
+  const onFinish = (values) => {
+    values.products = cart.products;
+    values.amount = cart.total;
+    addInvoice(dispatch, values);
+    dispatch(resetCart());
+    form.resetFields();
+    setIsModalVisible(false);
+  };
 
   const handleQuantity = (type, product) => {
     if (type === 'dec') {
@@ -223,7 +240,7 @@ const Cart = () => {
               <>
                 <Product>
                   <ProductDetail>
-                    <Image src={product.image} />
+                    <Image src={product.img} />
                     <Details>
                       <ProductName>
                         <b>Product:</b> {product.title}
@@ -244,9 +261,13 @@ const Cart = () => {
                       <Remove onClick={() => handleQuantity('dec', product)} />
                     </ProductAmountContainer>
                     <ProductPrice>
-                      $ {product.price.slice(1) * product.quantity}
+                      $ {product.price * product.quantity}
                     </ProductPrice>
-                    <RemoveButton onClick={() => dispatch(removeProduct(product))}>Remove</RemoveButton>
+                    <RemoveButton
+                      onClick={() => dispatch(removeProduct(product))}
+                    >
+                      Remove
+                    </RemoveButton>
                   </PriceDetail>
                 </Product>
                 <Hr />
@@ -271,24 +292,71 @@ const Cart = () => {
               <SummaryItemText>Total</SummaryItemText>
               <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
             </SummaryItem>
-            {/* <StripeCheckout
-                            name="Lama Shop"
-                            image="https://circuitcourt.macombgov.org/sites/default/files/content/government/circuitcourt/images/accept-online-payments_1.png"
-                            shippingAddress
-                            billingAddress
-                            description={`Your total $${cart.total}`}
-                            amount={cart.total * 100}
-                            token={onToken}
-                            stripeKey={KEY}
-                        > */}
+            <StripeCheckout
+              name='Lama Shop'
+              image='https://circuitcourt.macombgov.org/sites/default/files/content/government/circuitcourt/images/accept-online-payments_1.png'
+              shippingAddress
+              billingAddress
+              description={`Your total $${cart.total}`}
+              amount={cart.total}
+              token={onToken}
+              stripeKey={KEY}
+            >
+              <Button>CHECKOUT NOW</Button>
+            </StripeCheckout>
             <Button onClick={orderProduct}>ORDER</Button>
-
-            <Button>CHECKOUT NOW</Button>
-            {/* </StripeCheckout> */}
           </Summary>
         </Bottom>
       </Wrapper>
       <Footer />
+      <Modal
+        title='Basic Modal'
+        visible={isModalVisible}
+        onOk={form.submit}
+        onCancel={handleCancel}
+      >
+        <Form
+          name='basic'
+          labelCol={{
+            span: 8,
+          }}
+          wrapperCol={{
+            span: 16,
+          }}
+          initialValues={{
+            remember: true,
+          }}
+          onFinish={onFinish}
+          // onFinishFailed={onFinishFailed}
+          autoComplete='off'
+          form={form}
+        >
+          <Form.Item
+            label='Address'
+            name='address'
+            rules={[
+              {
+                required: true,
+                message: 'Please input your address!',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label='Phone Number'
+            name='phoneNumber'
+            rules={[
+              {
+                required: true,
+                message: 'Please input your phone number!',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </Container>
   );
 };

@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import cartReducer from './cartRedux'
 import userReducer from './userRedux'
 import invoiceReducer from './invoiceRedux'
+import productReducer from './productRedux'
 
 import {
     persistStore,
@@ -21,13 +22,13 @@ import storage from 'redux-persist/lib/storage'
     storage,
   }
   
-  const rootReducer = combineReducers({ user: userReducer, cart: cartReducer, invoice: invoiceReducer });
+  const rootReducer = combineReducers({ user: userReducer, cart: cartReducer, invoice: invoiceReducer, product: productReducer });
   
-  // const persistedReducer = persistReducer(persistConfig, rootReducer)
+  const persistedReducer = persistReducer(persistConfig, rootReducer)
   
 
 export const store = configureStore({
-    reducer: rootReducer,
+    reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

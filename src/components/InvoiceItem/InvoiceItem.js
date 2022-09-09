@@ -10,7 +10,7 @@ const InvoiceItem = ({item}) => {
           <div className={styles.imageContainer}>
             <img
               className={styles.image}
-              src={item.image}
+              src={item.img}
               alt=''
             />
           </div>

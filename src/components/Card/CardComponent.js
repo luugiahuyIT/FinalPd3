@@ -24,13 +24,13 @@ const CardComponent = ({ book }) => {
       cover={
           <Link to='/'>
             <div className={styles.cardWrapper}>
-              <img alt='example' src={book.image} />
+              <img alt='example' src={book.img} />
               <div className={styles.info}>
                 <Icon>
                   <ShoppingCartOutlined onClick={()=>dispatch(addProduct({...book, quantity: 1 }))}/>
                 </Icon>
                 <Icon>
-                  <Link to={`/book/${book.isbn13}`}>
+                  <Link to={`/book/${book._id}`}>
                     <SearchOutlined />
                   </Link>
                 </Icon>
@@ -45,10 +45,10 @@ const CardComponent = ({ book }) => {
       <div className={styles.container}>
         <h3 className={styles.title}>{book.title}</h3>
         <Link to='/' className={styles.link}>
-          Author
+          {book.author}
         </Link>
-        <p className={styles.price}>{book.price}</p>
-        <p className={styles.price}>sale {book.price}</p>
+        <p className={styles.price}>{book.price} $</p>
+        {/* <p className={styles.price}>sale {book.price}</p> */}
 
       </div>
     </Card>
