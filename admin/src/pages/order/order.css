@@ -1,0 +1,6 @@
+.tab {
+    display: flex;
+}
+.tabPane {
+    flex: 1;
+}
