@@ -11,8 +11,7 @@ import { Link, useLocation } from 'react-router-dom';
 import './user.css';
 // import "../newUser/newUser.css"
 import { updateInfo, getUser } from '../../redux/apiCalls';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function User() {
   const dispatch = useDispatch();
@@ -41,7 +40,7 @@ export default function User() {
 
   useEffect(() => {
     getUser(id, dispatch);
-  }, [id]);
+  }, [id, user]);
 
   console.log('inputs', inputs);
   const onUpdate = (e) => {

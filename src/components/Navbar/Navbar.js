@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 import { Badge } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-
+import { Dropdown, Menu, Space } from 'antd';
 import styled from 'styled-components';
 import { mobile } from '../../responsive';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { menuItem } from './menuItem';
-import Dropdown from '../DropDown/DropDown';
+import { logout } from '../../redux/apiCalls';
+
+// import Dropdown from '../DropDown/DropDown';
 const Container = styled.div`
   height: fit-content;
   ${mobile({ height: '50px' })}
@@ -79,10 +81,33 @@ const Logo = styled.h1`
   font-size: 24px;
 `;
 
+const menu = (
+  <Menu
+    items={[
+      {
+        label: (
+          <Link to='/management/invoicemanagement'>Invoice Management</Link>
+        ),
+        key: '0',
+      },
+      {
+        label: (
+          <Link to='/management/accountmanagement'>Account Management</Link>
+        ),
+        key: '1',
+      },
+      {
+        label: <a>Logout</a>,
+        key: '3',
+      },
+    ]}
+  />
+);
+
 const Navbar = (props) => {
   //   const [dropdown, setDropdown] = useState(false);
   const [display, setDisplay] = useState('none');
-
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.currentUser);
   const quantity = useSelector((state) => state.cart.quantity);
   const isLogin =
@@ -98,6 +123,34 @@ const Navbar = (props) => {
     }
   };
 
+  // const handleMenuClick = (e) => {
+  //   console.log('e', e);
+  //   if (e.key === '3') {
+  //     logout(dispatch);
+  //   }
+  // };
+  const menu = (
+    <Menu
+      items={[
+        {
+          label: (
+            <Link to='/management/invoicemanagement'>Invoice Management</Link>
+          ),
+          key: '0',
+        },
+        {
+          label: (
+            <Link to='/management/accountmanagement'>Account Management</Link>
+          ),
+          key: '1',
+        },
+        // {
+        //   label: <a>Logout</a>,
+        //   key: '3',
+        // },
+      ]}
+    />
+  );
   return (
     <Container>
       <Wrapper>
@@ -119,8 +172,15 @@ const Navbar = (props) => {
           </Link>
           {isLogin ? (
             <MenuItem onClick={handleMenu}>
-              {user && user.username}
-              <Dropdown item={menuItem} display={display} close={handleMenu} />
+              {/* <Dropdown item={menuItem} display={display} close={handleMenu} /> */}
+              <Dropdown overlay={menu} trigger={['click']}>
+                <a
+                  style={{ color: 'white' }}
+                  onClick={(e) => e.preventDefault()}
+                >
+                  <Space>{user && user.username}</Space>
+                </a>
+              </Dropdown>
             </MenuItem>
           ) : (
             <Link style={{ color: 'white' }} to='/login'>

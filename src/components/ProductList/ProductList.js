@@ -10,19 +10,22 @@ const ProductList = ({ params }) => {
   const listBook = useSelector((state) => state.product.products);
   const dispatch = useDispatch();
 
-  const totalSilde = listBook.length > 0 && listBook.length / 4;
+  const totalSilde =
+    listBook.length > 0 && listBook.length % 4 === 0
+      ? listBook.length / 4
+      : listBook.length / 4 + 1;
   const col = 4;
   const renderList = Array.from({ length: totalSilde }, (_, i) =>
     listBook.slice(i * col, (i + 1) * col)
   );
-  console.log('listBook',listBook)
+  console.log('listBook', listBook);
   useEffect(() => {
     // const fetchListBook = async () => {
     //     const res = await axios.get('https://api.itbook.store/1.0/new')
     //     setListBook(res.data.books)
     // }
     // fetchListBook()
-    getProducts(dispatch,params);
+    getProducts(dispatch, params);
   }, [params]);
 
   return (

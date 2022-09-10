@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import StripeCheckout from 'react-stripe-checkout';
 import { userRequest } from '../../api/request';
 import { useDispatch } from 'react-redux';
+import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 import {
   resetCart,
   incQuantityProduct,
@@ -127,7 +128,7 @@ const Summary = styled.div`
   border: 0.5px solid lightgray;
   border-radius: 10px;
   padding: 20px;
-  height: 50vh;
+  height: 60vh;
 `;
 const SummaryTitle = styled.h1`
   font-weight: 200;
@@ -148,6 +149,7 @@ const Button = styled.button`
   background-color: black;
   color: white;
   font-weight: 600;
+  margin-bottom: 10px;
 `;
 
 const RemoveButton = styled.button`
@@ -168,9 +170,35 @@ const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const [quantity, setQuantity] = useState(1);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [form] = Form.useForm();
 
-  console.log('key', KEY);
+  const [form] = Form.useForm();
+  // const [locationList, setLocationList] = useState([]);
+  const user = useSelector((state) => state.user.info);
+  // const {
+  //   placesService,
+  //   placePredictions,
+  //   getPlacePredictions,
+  //   isPlacePredictionsLoading,
+  // } = usePlacesService({
+  //   apiKey: 'AIzaSyAYxiiq49MDy8Kf3HhXBlmERSX5K00yUdc',
+  //   debounce: 1000,
+  // });
+
+  // console.log('locationList', locationList);
+  // useEffect(() => {
+  //   // fetch place details for the first element in placePredictions array
+  //   if (placePredictions.length > 0) {
+  //     setLocationList(
+  //       placePredictions.map((location) => {
+  //         return {
+  //           location: location.description,
+  //           place_id: location.place_id,
+  //         };
+  //       })
+  //     );
+  //   }
+  // }, [placePredictions]);
+
   const [stripeToken, setStripeToken] = useState(null);
   const onToken = (token) => {
     setStripeToken(token);
@@ -181,7 +209,7 @@ const Cart = () => {
         const res = await userRequest.post('/checkout/payment', {
           tokenId: stripeToken.id,
           amount: cart.total,
-          products: cart.products
+          products: cart.products,
         });
 
         // history.push('/success', {
@@ -199,9 +227,17 @@ const Cart = () => {
     console.log('cart', cart.products);
   };
   const handleCancel = () => {
-    form.resetFields();
     setIsModalVisible(false);
   };
+
+  useEffect(() => {
+    if (Object.keys(user).length) {
+      form.setFieldsValue({
+        address: user.address ? user.address : '',
+        phoneNumber: user.phone ? user.phone : '',
+      });
+    }
+  }, [user]);
 
   const onFinish = (values) => {
     values.products = cart.products;
@@ -310,7 +346,7 @@ const Cart = () => {
       </Wrapper>
       <Footer />
       <Modal
-        title='Basic Modal'
+        title='Confirm Address'
         visible={isModalVisible}
         onOk={form.submit}
         onCancel={handleCancel}

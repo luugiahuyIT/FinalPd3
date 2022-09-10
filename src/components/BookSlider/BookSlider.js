@@ -20,6 +20,8 @@ const BookSlider = (props) => {
       ? state.product.recommendList
       : state.product.products
   );
+
+  const user = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
 
   const totalSilde =
@@ -41,7 +43,7 @@ const BookSlider = (props) => {
       getRecommendBook(dispatch);
     }
     getProducts(dispatch);
-  }, []);
+  }, [user]);
 
   return (
     <>

@@ -1,41 +1,46 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import cartReducer from './cartRedux'
-import userReducer from './userRedux'
-import invoiceReducer from './invoiceRedux'
-import productReducer from './productRedux'
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import cartReducer from './cartRedux';
+import userReducer from './userRedux';
+import invoiceReducer from './invoiceRedux';
+import productReducer from './productRedux';
+import filterReducer from './filterRedux';
 
 import {
-    persistStore,
-    persistReducer,
-    FLUSH,
-    REHYDRATE,
-    PAUSE,
-    PERSIST,
-    PURGE,
-    REGISTER,
-  } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
-    const persistConfig = {
-    key: 'root',
-    version: 1,
-    storage,
-  }
-  
-  const rootReducer = combineReducers({ user: userReducer, cart: cartReducer, invoice: invoiceReducer, product: productReducer });
-  
-  const persistedReducer = persistReducer(persistConfig, rootReducer)
-  
+const persistConfig = {
+  key: 'root',
+  version: 1,
+  storage,
+};
+
+const rootReducer = combineReducers({
+  user: userReducer,
+  cart: cartReducer,
+  invoice: invoiceReducer,
+  product: productReducer,
+  filter: filterReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-    reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) =>
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
-})
+});
 
-export let persistor = persistStore(store)
-
+export let persistor = persistStore(store);

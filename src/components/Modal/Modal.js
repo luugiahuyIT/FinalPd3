@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import style from './Modal.module.css';
 import InvoiceItem from '../InvoiceItem/InvoiceItem';
-const Modal = ({ item, modalStyle, show, onClose, backdropStyle }) => {
+const Modal = ({ item, modalStyle, show, onClose, backdropStyle, total }) => {
   const modalRef = useRef(null);
+  console.log('modal', item);
   useEffect(() => {
     if (show) {
       modalRef.current.classList.add(style.visible);
@@ -27,6 +28,7 @@ const Modal = ({ item, modalStyle, show, onClose, backdropStyle }) => {
           {item.map((item) => (
             <InvoiceItem item={item} />
           ))}
+          <div className={style.total}>Total: {total} $</div>
         </div>
       </div>
     </React.Fragment>

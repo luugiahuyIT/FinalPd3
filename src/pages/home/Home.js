@@ -8,10 +8,9 @@ const Home = () => {
     <div className={styles.homeContainer}>
       <Navbar />
       <img className={styles.banner} src='https://cdn.waterstones.com/images/00233541-1920x533.jpeg' alt='banner' />
-      <BookSlider line/>
-      <BookSlider line/>
-      <BookSlider line/>
       <BookSlider type='recommend' line={false}/>
+      <BookSlider line/>
+      <BookSlider line/>
       <Footer/>
     </div>
   )

@@ -3,6 +3,7 @@ import {
   loginFailure,
   loginSuccess,
   getUserInfo,
+  logoutUser,
 } from './userRedux';
 import { publicRequest, userRequest } from '../api/request';
 import {
@@ -12,7 +13,8 @@ import {
   getRecommendList,
 } from './productRedux';
 
-import { getInvoice } from './invoiceRedux';
+import { getInvoice, deleteInvoice } from './invoiceRedux';
+import { getData } from './filterRedux';
 
 export const login = async (dispatch, user) => {
   dispatch(loginStart());
@@ -25,6 +27,15 @@ export const login = async (dispatch, user) => {
   } catch (err) {
     dispatch(loginFailure());
   }
+};
+
+export const logout = async (dispatch) => {
+  console.log('test')
+  try {
+    dispatch(logoutUser());
+    localStorage.setItem('USER_TOKEN', null);
+    localStorage.setItem('USER_ID', null);
+  } catch (err) {}
 };
 
 export const getProducts = async (dispatch, params) => {
@@ -87,5 +98,30 @@ export const updateInfo = async (id, user, dispatch) => {
     // update
     const res = await userRequest.put(`/users/${id}`, user);
     dispatch(getUser(id, dispatch));
+  } catch (err) {}
+};
+
+export const getAuthorAndCategories = async (dispatch) => {
+  try {
+    // update
+    const [authors, categories] = await Promise.all([
+      publicRequest.get('/author/'),
+      publicRequest.get('/category/'),
+    ]);
+
+    dispatch(
+      getData({
+        authors: authors.data,
+        categories: categories.data,
+      })
+    );
+  } catch (err) {}
+};
+
+export const deleteOrder = async (id, dispatch) => {
+  try {
+    // update
+    const res = await userRequest.delete(`/orders/${id}`);
+    dispatch(deleteInvoice(id));
   } catch (err) {}
 };

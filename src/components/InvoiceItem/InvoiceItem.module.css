@@ -1,16 +1,17 @@
 .container {
     width: 100%;
+    margin-bottom: 20px;
 }
 
 .imageContainer {
     height: fit-content;
     width: 100%;
     background-color: white;
-    over-flow: hidden;
+    overflow: hidden;
 }
 .image {
     /* height: fit-content; */
-    height: 250px;
+    height: 200px;
     width: 100%;
     border-radius: 20px;
 }
@@ -23,4 +24,5 @@
 }
 .text {
     width: 100%;
+    font-size : 16px;
 }

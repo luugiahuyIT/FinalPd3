@@ -7,7 +7,7 @@ import styles from './Filter.module.css';
 
 const Filter = (props) => {
   const [show, setShow] = useState(false);
-
+  
   return (
     <div className={styles.filterContainer}>
       <div className={styles.header} onClick={() => setShow(!show)}>
@@ -23,8 +23,8 @@ const Filter = (props) => {
             src="https://tiny.cc/tuotsz"
             alt="check mark"
         />} animation="rotate">{item.text}</Radio> */}
-              <Radio shape='curve' variant='thick' name={props.type} value={item.text} onChange={props.onClick}>
-                {item.text}
+              <Radio shape='curve' variant='thick' name={props.type} value={item.name} onChange={props.onClick}>
+                {item.name}
               </Radio>
             </li>
           ))}

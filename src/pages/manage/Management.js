@@ -27,19 +27,6 @@ const Management = () => {
     <>
       <Navbar />
       <div className={styles.container}>
-        <Select
-          defaultValue='lucy'
-          style={{
-            width: 120,
-          }}
-          onChange={handleChange}
-        >
-          <Option value='jack'>Jack</Option>
-          <Option value='lucy'>Lucy</Option>
-          <Option value='disabled' disabled>
-            Disabled
-          </Option>
-        </Select>
         <Tabs
           type='card'
           defaultActiveKey='1'
@@ -56,12 +43,25 @@ const Management = () => {
               <Invoice item={item} />
             ))}
           </TabPane>
-          <TabPane tab='Approve' key='3'></TabPane>
-          <TabPane tab='Delivered' key='4'></TabPane>
+          <TabPane tab='Approve' key='3'>
+            {invoice.invoiceApproveList.map((item) => (
+              <Invoice type='approve' item={item} />
+            ))}
+          </TabPane>
+          <TabPane tab='Delivered' key='4'>
+            {invoice.invoiceDeliveredList.map((item) => (
+              <Invoice item={item} />
+            ))}
+          </TabPane>
+          <TabPane tab='Not Approve' key='5'>
+            {invoice.invoiceNotApproveList.map((item) => (
+              <Invoice item={item} />
+            ))}
+          </TabPane>
         </Tabs>
-        <div style={{ margin: '20px auto' }}>
+        {/* <div style={{ margin: '20px auto' }}>
           <Pagination defaultCurrent={6} total={50} />
-        </div>
+        </div> */}
       </div>
       <Footer />
     </>

@@ -5,23 +5,28 @@ const invoiceSlice = createSlice({
   initialState: {
     invoiceWaitingList: [],
     invoiceApproveList: [],
-    invoiceShippingList: [],
-    invoiceShippedList: [],
+    invoiceDeliveredList: [],
     invoiceAllList: [],
+    invoiceNotApproveList: [],
   },
   reducers: {
-    // addInvoice: (state, action) => {
-    //     state.invoiceList.push(action.payload)
-    // },
+    deleteInvoice: (state, action) => {
+      state.invoiceWaitingList = state.invoiceWaitingList.filter(
+        (item) => item._id !== action.payload
+      );
+      state.invoiceAllList = state.invoiceAllList.filter(
+        (item) => item._id !== action.payload
+      );
+    },
     getInvoice: (state, action) => {
       state.invoiceWaitingList = action.payload.waiting;
       state.invoiceApproveList = action.payload.approve;
-      state.invoiceShippingList = action.payload.shipping;
-      state.invoiceShippedList = action.payload.shipped;
+      state.invoiceDeliveredList = action.payload.delivered;
       state.invoiceAllList = action.payload.all;
+      state.invoiceNotApproveList = action.payload.notApprove;
     },
   },
 });
 
-export const { addInvoice, getInvoice } = invoiceSlice.actions;
+export const { deleteInvoice, getInvoice } = invoiceSlice.actions;
 export default invoiceSlice.reducer;
