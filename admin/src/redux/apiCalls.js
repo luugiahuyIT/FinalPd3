@@ -31,7 +31,7 @@ import {
   addProductSuccess,
 } from './productRedux';
 
-import { getOrder } from './orderRedux';
+import { getOrder, deleteOrder } from './orderRedux';
 import { getAuthor, deleteAuthor } from './authorRedux';
 import { getCategories, deleteCategory } from './categoryRedux';
 
@@ -216,6 +216,15 @@ export const deleteCategoryById = async (dispatch, id) => {
   try {
     const res = await userRequest.delete(`/category/${id}`);
     dispatch(deleteCategory(id));
+  } catch (err) {
+    // dispatch(getProductFailure());
+  }
+};
+
+export const deleteOrderById = async (dispatch, id, status) => {
+  try {
+    const res = await userRequest.delete(`/orders/${id}`);
+    dispatch(deleteOrder({id, status}));
   } catch (err) {
     // dispatch(getProductFailure());
   }

@@ -6,23 +6,55 @@ import 'antd/dist/antd.css';
 import { Table } from 'antd';
 import { columns } from './columns';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOrderList, updateStatusOrder } from '../../redux/apiCalls';
+import {
+  getOrderList,
+  updateStatusOrder,
+  deleteOrderById,
+} from '../../redux/apiCalls';
 import { DeleteOutline } from '@material-ui/icons';
-
+import { orderDetail } from '../../redux/orderRedux';
+import { Modal } from 'antd';
+import Detail from './Detail'
 const { TabPane } = Tabs;
 
 const Order = () => {
   const orderList = useSelector((state) => state.order);
+  const detail = useSelector((state) => state.order.orderDetail);
+
   console.log('orderList', orderList);
   const [newColumns, setNewColumns] = useState();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     getOrderList(dispatch);
   }, [dispatch]);
 
-  const handleDelete = (id) => {
-    // deleteProduct(id, dispatch);
+  const handleDelete = (id, status) => {
+    deleteOrderById(dispatch, id, status);
+    getOrderList(dispatch);
+  };
+
+  const handleUpdateStatusNotApprove = (id) => {
+    const status = {
+      status: 'not approve',
+    };
+    updateStatusOrder(dispatch, id, status);
+    getOrderList(dispatch);
+  };
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const onFinish = (values) => {
+    setIsModalVisible(false);
+  };
+
+  const showDetail = (record) => {
+    setIsModalVisible(true);
+    console.log('record', record);
+    dispatch(orderDetail(record));
   };
 
   const handleUpdateStatus = (record) => {
@@ -30,6 +62,7 @@ const Order = () => {
       status: 'approve',
     };
     updateStatusOrder(dispatch, record._id, status);
+    getOrderList(dispatch);
   };
   useEffect(() => {
     setNewColumns([
@@ -40,7 +73,7 @@ const Order = () => {
         render: (_, record) => (
           <>
             <button
-              // onClick={() => handleUpdateStatus(record._id)}
+              onClick={() => handleUpdateStatusNotApprove(record._id)}
               className='productListEdit'
               style={{ backgroundColor: 'red' }}
             >
@@ -54,7 +87,7 @@ const Order = () => {
             </button>
             <DeleteOutline
               className='productListDelete'
-              onClick={() => handleDelete(record._id)}
+              onClick={() => handleDelete(record._id, record.status)}
             />
           </>
         ),
@@ -70,7 +103,18 @@ const Order = () => {
         tabBarStyle={{ margin: 'auto' }}
       >
         <TabPane tab='All' key='1'>
-          <Table columns={newColumns} dataSource={orderList.orderAllList} />
+          <Table
+            columns={newColumns}
+            dataSource={orderList.orderAllList}
+            onRow={record => {
+              return {
+                onDoubleClick: () => {
+                  console.log('record', record);
+                  showDetail({...record});
+                },
+              };
+            }}
+          />
         </TabPane>
         <TabPane tab='Waiting' key='2'>
           <Table columns={newColumns} dataSource={orderList.orderWaitingList} />
@@ -78,8 +122,27 @@ const Order = () => {
         <TabPane tab='Approve' key='3'>
           <Table columns={newColumns} dataSource={orderList.orderApproveList} />
         </TabPane>
-        {/* <TabPane columns={newColumns} dataSource={orderList.orderAllList} tab='Delivered' key='4'></TabPane> */}
+        <TabPane tab='Not Approve' key='4'>
+          <Table
+            columns={newColumns}
+            dataSource={orderList.orderNotApproveList}
+          />
+        </TabPane>
+        <TabPane tab='Delivered' key='5'>
+          <Table
+            columns={newColumns}
+            dataSource={orderList.orderDeliveriedList}
+          />
+        </TabPane>
       </Tabs>
+      <Modal
+        title=''
+        visible={isModalVisible}
+        onOk={onFinish}
+        onCancel={handleCancel}
+      >
+        <Detail item={detail}/>
+      </Modal>
     </div>
   );
 };

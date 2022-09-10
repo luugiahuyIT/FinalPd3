@@ -20,6 +20,11 @@ export const columns = [
     key: 'address',
   },
   {
+    title: 'Status',
+    dataIndex: 'statusPay',
+    key: 'statusPay',
+  },
+  {
     title: 'Total',
     dataIndex: 'address',
     key: 'address',

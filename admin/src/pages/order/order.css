@@ -4,3 +4,14 @@
 .tabPane {
     flex: 1;
 }
+
+.totalBill {
+   margin: 0 auto;
+   font-size: 18px;
+   font-weight: 700;
+   background-color: teal;
+   padding: 10px;
+   border: 1px solid teal;
+   color: white;
+   text-align: center;
+}
