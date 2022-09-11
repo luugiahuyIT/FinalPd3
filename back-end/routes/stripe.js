@@ -16,7 +16,7 @@ router.post('/payment', verifyToken, (req, res) => {
             res.status(500).json(stripeErr)
         } else {
             const order = {
-                amount: req.body.amount,
+                amount: req.body.amount / 100,
                 products: req.body.products,
                 address: stripeRes.billing_details.address.country + stripeRes.billing_details.address.city + stripeRes.billing_details.address.line1,
                 phoneNumber: req.user.phoneNumber || '012345678',

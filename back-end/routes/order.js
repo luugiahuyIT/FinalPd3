@@ -38,7 +38,7 @@ router.put('/:id', verifyTokenAndAdmin, async (req, res) => {
 });
 
 // DELETE Product
-router.delete('/:id', verifyTokenAndAdmin, async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res) => {
   try {
     await Order.findByIdAndDelete(req.params.id);
     res.status(200).json('Order has been deleted');
@@ -52,10 +52,10 @@ router.get('/find/:userId', verifyTokenAndAuthor, async (req, res) => {
   try {
     let orders = await Order.find({ userId: req.params.userId });
     const newOrders = {
-      waiting: orders.filter((item) => item.status === 'pending'),
+      waiting: orders.filter((item) => item.status === 'waiting'),
       approve: orders.filter((item) => item.status === 'approve'),
-      shipping: orders.filter((item) => item.status === 'shipping'),
-      shipped: orders.filter((item) => item.status === 'shipped'),
+      delivered: orders.filter((item) => item.status === 'delivered'),
+      notApprove: orders.filter((item) => item.status === 'not approve'),
       all: orders.map((item) => item),
     };
     res.status(200).json(newOrders);
@@ -75,18 +75,15 @@ router.get('/:id', verifyToken, async (req, res) => {
           localField: 'products._id',
           foreignField: '_id',
           let: {
-            produc: "$doc.doc2CodeArray.code"
+            produc: '$doc.doc2CodeArray.code',
           },
           pipeline: [
             {
               $match: {
                 $expr: {
-                  $in: [
-                    "$doc.code",
-                    "$$doc2CodeArray"
-                  ]
-                }
-              }
+                  $in: ['$doc.code', '$$doc2CodeArray'],
+                },
+              },
             },
           ],
           as: 'product',
@@ -105,10 +102,10 @@ router.get('/', verifyTokenAndAdmin, async (req, res) => {
   try {
     const orders = await Order.find();
     const newOrders = {
-      waiting: orders.filter((item) => item.status === 'pending'),
+      waiting: orders.filter((item) => item.status === 'waiting'),
       approve: orders.filter((item) => item.status === 'approve'),
-      shipping: orders.filter((item) => item.status === 'shipping'),
-      shipped: orders.filter((item) => item.status === 'shipped'),
+      notApprove: orders.filter((item) => item.status === 'not approve'),
+      delivered: orders.filter((item) => item.status === 'delivered'),
       all: orders.map((item) => item),
     };
     res.status(200).json(newOrders);
